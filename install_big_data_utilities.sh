@@ -107,17 +107,6 @@ echo -e "<?xml version=\"1.0\"?>
 cd
 hadoop namenode -format
 /usr/local/hadoop/sbin/start-all.sh
-wget https://archive.apache.org/dist/pig/pig-0.15.0/pig-0.15.0.tar.gz
-tar -zxvf pig-0.15.0.tar.gz
-rm -rf pig-0.15.0.tar.gz
-mv pig-0.15.0 pig
-mv pig /usr/local/
-cd /usr/local/pig
-echo -e "export PIG_HOME=/usr/local/pig
-export PATH=\$PATH:/usr/local/pig/bin" >> /etc/profile
-export PIG_HOME=/usr/local/pig
-export PATH=$PATH:/usr/local/pig/bin
-. /etc/profile
 wget https://archive.apache.org/dist/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
 tar -xvzf  sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
 rm -rf sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
@@ -154,7 +143,6 @@ echo "----------------------------------------------"
 java -version
 hadoop version
 jps
-pig -version
 sqoop version
 python3 --version
 pip3 --version
