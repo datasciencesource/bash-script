@@ -1,4 +1,43 @@
 #!/bin/bash
+set -e
+# ---------- ADRI Readiness Check ----------
+echo "Starting ADRI readiness check...\\n"
+# 1. Linux CLI availability
+if [ -x "$(command -v bash)" ] && [ -x "$(command -v apt-get)" ]; then
+    echo "1.Linux CLI: Available\\n"
+    LC=1
+else
+    echo "1.Linux CLI: Missing\\n"
+    LC=0
+fi
+# 2. Internet connectivity test
+if ping -c 1 -W 2 downloads.apache.org >/dev/null 2>&1; then
+    echo "2.Internet connectivity: OK\\n"
+    IC=1
+else
+    echo "2.Internet connectivity: Failed\\n"
+    IC=0
+fi
+# 3. Script validation (syntax check)
+if bash -n "$0" >/dev/null 2>&1; then
+    echo "Script validation: Passed\\n"
+    SV=1
+else
+    echo "Script validation: Failed\\n"
+    SV=0
+fi
+# Compute ADRI score (0–1 scale)
+ADRI=$(echo "scale=2; ($LC + $IC + $SV)/3" | bc)
+echo "------------------------------\\n"
+if (( $(echo "$ADRI >= 0.80" | bc -l) )); then
+    echo "ADRI Readiness: PASSED (Score = $ADRI)\\n"
+else
+    echo "ADRI Readiness: FAILED (Score = $ADRI)\\n"
+    exit 1
+fi
+echo "----------------------------------------------\\n"
+
+# Five-Step Wrok Flow
 sudo apt-get update -y
 sudo apt install openjdk-11-jdk -y
 echo JAVA_HOME=\"/usr/lib/jvm/java-11-openjdk-amd64/\" >> /etc/environment
